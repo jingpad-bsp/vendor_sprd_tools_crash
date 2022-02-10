@@ -1,0 +1,70 @@
+#!/bin/sh
+
+#CRASH_PATH=$HOME"/crash"
+#BASHRC=$HOME"/bashrc"
+CRASH_PATH=$HOME"/.crash"
+BASHRC=$HOME"/.bashrc"
+CRASH_PATH_BIN=$CRASH_PATH"/bin"
+CRASH_PATH_BAK=$CRASH_PATH"/bak"
+CRASH_PATH_EXTENSION=$CRASH_PATH"/extensions"
+CRASHRC=$HOME"/.crashrc"
+
+if [ ! -d "$CRASH_PATH" ]; then
+    mkdir "$CRASH_PATH"
+fi
+
+if [ ! -d "$CRASH_PATH_BAK" ]; then
+    mkdir "$CRASH_PATH_BAK"
+fi
+
+if [ ! -d "$CRASH_PATH_BIN" ]; then
+    mkdir "$CRASH_PATH_BIN"
+else
+    rm $CRASH_PATH_BAK"/bin" -rf
+    mv "$CRASH_PATH_BIN" "$CRASH_PATH_BAK"
+    mkdir "$CRASH_PATH_BIN"
+fi
+
+if [ ! -d "$CRASH_PATH_EXTENSION" ]; then
+    mkdir "$CRASH_PATH_EXTENSION"
+else
+    rm $CRASH_PATH_BAK"/extensions" -rf
+    mv "$CRASH_PATH_EXTENSION" "$CRASH_PATH_BAK"
+    mkdir "$CRASH_PATH_EXTENSION"
+fi
+
+if [ -f "$CRASHRC" ]; then
+    rm "$CRASHRC"
+fi
+
+echo "copy crash binary ..."
+cp ./bin/* "$CRASH_PATH_BIN"  -R
+
+echo "copy crash extensions ..."
+cp ./extensions/* "$CRASH_PATH_EXTENSION" -R
+
+grep "CRASH_EXTENSIONS" $BASHRC
+if [ $? -ne 0 ]; then
+    echo "configure environment ..."
+    echo "export CRASH_EXTENSIONS="$CRASH_PATH_EXTENSION >> $BASHRC
+    echo "export PATH=$PATH:$CRASH_PATH_BIN" >> $BASHRC
+    source $BASHRC
+fi
+
+source ~/.bashrc
+
+echo "\n"
+echo "===============================================================================
+crash tools setup done! 
+execute 'source ~/.bashrc' if needed
+
+Supported memory dump:
+  * Kernel (ARM, ARM64, X86_64, X86) and
+  * Mobilevisor (For iSharkL2/iWhale2 project)
+
+Usage
+  * pycrash [symbol_file] [sysdump_file]
+	pycrash ---help for more info.
+==============================================================================="
+echo "\n"
+

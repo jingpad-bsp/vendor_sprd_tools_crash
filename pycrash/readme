@@ -1,0 +1,32 @@
+===============================================================================
+crash tools setup done!
+
+Supported memory dump:
+  * Kernel (ARM, ARM64, X86_64, X86) and
+  * Mobilevisor (For iSharkL2/iWhale2 project)
+
+Usage
+  * pycrash [symbol_file] [sysdump_file]
+	"pycrash ---help" for more info.
+===============================================================================
+
+===============================================================================
+NAME
+  pycrash - wrapper of crash tools
+
+SYNOPSIS
+  pycrash [option] [symbol] [memdump]
+
+DESCRIPTION
+  This command is a wrapper of crash tools, which will auto detect arch base on
+  input symbol files, and fill must parameters for each arch. and will do some
+  sanity check automatically.
+
+    ---help  display this help message.
+	other options will pass to crash tool directly.
+
+Example:
+	 pycrash   vmlinux             sysdump
+	 pycrash   mobilevisor.elf     sysdump.core.01_0x00000000-0x007fffff_dump.lst
+	 pycrash   mobilevisor.elf     sysdump.core.12_0x48000000-0x487fffff_dump.lst
+===============================================================================
